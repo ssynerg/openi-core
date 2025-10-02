@@ -1,0 +1,13 @@
+[package]
+name = "openi-core-sdk"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Rust SDK for OpenI agents"
+
+[dependencies]
+openi-core-fabric = { path = "../../../crates/core-fabric" }
+serde = { version = "1", features = ["derive"] }
+tokio = { version = "1", features = ["macros", "rt"] }
+anyhow = "1"
+serde_json = "1"

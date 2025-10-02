@@ -1,0 +1,14 @@
+[workspace]
+resolver = "2"
+members = [
+  "crates/core-fabric",
+  "crates/core-kernel",
+  "crates/core-cli",
+  "sdk/rust/openi-core-sdk",
+]
+
+[workspace.package]
+edition = "2021"
+license = "MIT"
+authors = ["Synergy Technologies <eng@synergytech.ai>"]
+repository = "https://github.com/synergy-tech/openi-core"

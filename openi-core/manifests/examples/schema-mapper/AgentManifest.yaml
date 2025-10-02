@@ -1,0 +1,25 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: schema-mapper
+  version: 0.1.0
+spec:
+  runtime: wasm         # or oci
+  source: registry://synergy/schema-mapper:0.1.0
+  capabilities:
+    inputs: ["ddl.discovered.v1"]
+    outputs: ["schema.mapping.v1"]
+  routes:
+    subscribe: ["topic://ddl/discovered/*"]
+    publish:   ["topic://schema/mapping/*"]
+  policies:
+    scopes: ["schema:read"]
+    maxLatencyMs: 500
+  replicas: 2
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+    requests:
+      cpu: "250m"
+      memory: "128Mi"

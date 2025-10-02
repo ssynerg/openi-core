@@ -1,0 +1,17 @@
+# Rust/Build
+/target
+**/target
+Cargo.lock
+
+# Python
+__pycache__/
+*.pyc
+
+# Node/Web (future)
+node_modules/
+dist/
+
+# Editor
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,19 @@
+[package]
+name = "openi-core-fabric"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "AI-native fabric: typed envelopes, signing, headers"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_bytes = "0.11"
+ed25519-dalek = { version = "2", features = ["rand_core"] }
+rand_core = "0.6"
+thiserror = "1"
+time = { version = "0.3", features = ["formatting", "parsing"] }
+ulid = "1"
+base64 = "0.22"
+anyhow = "1"
+uuid = { version = "1", features = ["v4"] }
