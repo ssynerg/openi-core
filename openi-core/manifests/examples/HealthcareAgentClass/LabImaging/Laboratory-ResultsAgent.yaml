@@ -1,0 +1,18 @@
+kind: Agent
+name: lab-results
+version: 0.1.0
+runtime: rust
+description: >
+  Validates HL7 ORU^R01 messages and maps to FHIR Observation resources.
+topics:
+  subscribe:
+    - "topic://lab/*"
+  publish:
+    - "topic://emr/lab-results"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/lab_results_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true
