@@ -1,0 +1,18 @@
+kind: Agent
+name: rcm-remittance
+version: 0.1.0
+runtime: rust
+description: >
+  Interprets 835/ERA remittance advice, reconciles with claims.
+topics:
+  subscribe:
+    - "topic://payers/835"
+  publish:
+    - "topic://billing/reconciled"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/rcm_remittance_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

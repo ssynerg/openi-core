@@ -1,0 +1,20 @@
+kind: Agent
+name: rcm-claims
+version: 0.1.0
+runtime: rust
+description: >
+  Processes X12 837 claim submissions from EMR discharge events.
+topics:
+  subscribe:
+    - "topic://emr/discharge/*"
+  publish:
+    - "topic://claims/837"
+  errors:
+    - "topic://claims/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/rcm_claims_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true
