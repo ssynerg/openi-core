@@ -1,0 +1,22 @@
+kind: Agent
+name: pharmacy-adherence
+version: 0.1.0
+runtime: rust
+description: >
+  Tracks patient refill history and adherence to medications. 
+  Publishes reminders and adherence risk scores for care management.
+topics:
+  subscribe:
+    - "topic://pharmacy/dispense"
+  publish:
+    - "topic://pharmacy/adherence"
+    - "topic://emr/adherence"
+  errors:
+    - "topic://pharmacy/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/pharmacy_adherence_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

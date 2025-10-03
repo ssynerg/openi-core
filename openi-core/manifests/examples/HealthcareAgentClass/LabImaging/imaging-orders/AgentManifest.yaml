@@ -1,0 +1,21 @@
+kind: Agent
+name: imaging-orders
+version: 0.1.0
+runtime: rust
+description: >
+  Normalizes HL7 ORM^O01 imaging orders into FHIR ServiceRequest resources, 
+  routes to PACS/RIS, and tracks scheduling/fulfillment.
+topics:
+  subscribe:
+    - "topic://emr/orders/imaging"
+  publish:
+    - "topic://imaging/orders"
+  errors:
+    - "topic://imaging/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/imaging_orders_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

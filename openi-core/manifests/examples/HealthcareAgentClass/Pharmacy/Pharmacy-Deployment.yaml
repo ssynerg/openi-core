@@ -1,0 +1,19 @@
+kind: Deployment
+name: healthcare-pharmacy-suite
+version: 0.1.0
+description: >
+  Full Pharmacy agent suite for healthcare. 
+  Covers prescription mapping, dispensing, inventory management, 
+  prior authorizations, and patient adherence monitoring.
+
+agents:
+  - path: "manifests/examples/HealthcareAgentClass/Pharmacy/pharmacy-rx/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Pharmacy/pharmacy-dispense/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Pharmacy/pharmacy-inventory/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Pharmacy/pharmacy-priorauth/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Pharmacy/pharmacy-adherence/AgentManifest.yaml"
+
+compliance:
+  hipaa: true
+  audit_logging: enabled
+  data_retention: "7 years"

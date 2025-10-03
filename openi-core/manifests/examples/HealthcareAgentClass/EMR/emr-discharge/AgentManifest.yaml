@@ -1,0 +1,21 @@
+kind: Agent
+name: emr-discharge
+version: 0.1.0
+runtime: rust
+description: >
+  Processes HL7 ADT A03 discharge events and maps them into FHIR Encounter/Discharge 
+  summaries. Publishes discharge events for claim initiation and care transitions.
+topics:
+  subscribe:
+    - "topic://hl7/discharge/*"
+  publish:
+    - "topic://emr/discharge"
+  errors:
+    - "topic://emr/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/emr_discharge_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

@@ -1,0 +1,20 @@
+kind: Agent
+name: x12-gateway-agent
+version: 0.1.0
+runtime: rust
+description: >
+  Ingests ANSI X12 transactions (837, 835, 270/271) 
+  from payers and publishes normalized envelopes.
+topics:
+  publish:
+    - "topic://x12/*"
+  errors:
+    - "topic://gateway/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/x12_gateway_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  soc2: true
+  pii: true

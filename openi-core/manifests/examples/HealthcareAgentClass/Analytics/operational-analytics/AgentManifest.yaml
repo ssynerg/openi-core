@@ -1,0 +1,24 @@
+kind: Agent
+name: operational-analytics
+version: 0.1.0
+runtime: rust
+description: >
+  Analyzes administrative metrics like staffing, payroll, and bed capacity 
+  to optimize hospital operations and resource utilization.
+topics:
+  subscribe:
+    - "topic://staffing/assignments"
+    - "topic://payroll/processed"
+    - "topic://capacity/forecasts"
+  publish:
+    - "topic://analytics/operations"
+  errors:
+    - "topic://analytics/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/operational_analytics_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  soc2: true
+  pii: true

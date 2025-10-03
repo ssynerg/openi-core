@@ -1,0 +1,20 @@
+kind: Agent
+name: emr-scheduling
+version: 0.1.0
+runtime: rust
+description: >
+  Normalizes HL7 SIU scheduling and ADT appointment updates into FHIR Appointment resources.
+topics:
+  subscribe:
+    - "topic://hl7/scheduling/*"
+  publish:
+    - "topic://emr/scheduling"
+  errors:
+    - "topic://emr/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/emr_scheduling_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

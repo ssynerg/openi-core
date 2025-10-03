@@ -1,0 +1,24 @@
+kind: Agent
+name: rcm-analytics
+version: 0.1.0
+runtime: rust
+description: >
+  Analyzes claims, denials, and remittances to detect bottlenecks, 
+  forecast cash flow, and benchmark payer performance.
+topics:
+  subscribe:
+    - "topic://claims/837"
+    - "topic://remittance/processed"
+    - "topic://denials/*"
+  publish:
+    - "topic://analytics/rcm"
+  errors:
+    - "topic://analytics/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/rcm_analytics_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  soc2: true
+  pii: true

@@ -1,0 +1,21 @@
+kind: Agent
+name: predictive-agent
+version: 0.1.0
+runtime: rust
+description: >
+  Runs predictive analytics for patient length of stay (LOS) 
+  and readmission risk, based on EMR discharge events.
+topics:
+  subscribe:
+    - "topic://emr/discharge/*"
+  publish:
+    - "topic://analytics/predictions"
+  errors:
+    - "topic://analytics/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/predictive_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

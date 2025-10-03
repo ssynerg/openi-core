@@ -1,0 +1,19 @@
+kind: Deployment
+name: healthcare-lab-imaging-suite
+version: 0.1.0
+description: >
+  Full Lab and Imaging agent suite for healthcare.
+  Includes lab orders, imaging orders, results normalization, 
+  and secondary analytics.
+
+agents:
+  - path: "manifests/examples/HealthcareAgentClass/LabImaging/lab-results/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/LabImaging/imaging-results/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/LabImaging/lab-orders/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/LabImaging/imaging-orders/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/LabImaging/results-analytics/AgentManifest.yaml"
+
+compliance:
+  hipaa: true
+  audit_logging: enabled
+  data_retention: "7 years"

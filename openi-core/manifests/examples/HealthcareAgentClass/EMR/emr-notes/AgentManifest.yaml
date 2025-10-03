@@ -1,0 +1,21 @@
+kind: Agent
+name: emr-notes
+version: 0.1.0
+runtime: rust
+description: >
+  Parses and normalizes unstructured clinical notes (HL7 MDM or plain text) 
+  into FHIR DocumentReference and Composition resources.
+topics:
+  subscribe:
+    - "topic://hl7/notes/*"
+  publish:
+    - "topic://emr/notes"
+  errors:
+    - "topic://emr/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/emr_notes_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

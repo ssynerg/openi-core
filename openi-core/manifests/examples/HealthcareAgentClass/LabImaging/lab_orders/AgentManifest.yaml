@@ -1,0 +1,21 @@
+kind: Agent
+name: lab-orders
+version: 0.1.0
+runtime: rust
+description: >
+  Normalizes HL7 ORM^O01 lab orders into FHIR ServiceRequest resources, 
+  routes to LIS or diagnostic systems, and awaits results.
+topics:
+  subscribe:
+    - "topic://emr/orders/labs"
+  publish:
+    - "topic://lab/orders"
+  errors:
+    - "topic://lab/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/lab_orders_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

@@ -1,0 +1,22 @@
+kind: Agent
+name: audit-agent
+version: 0.1.0
+runtime: rust
+description: >
+  Monitors all topics for PHI access and logs audit trails for compliance.
+topics:
+  subscribe:
+    - "topic://*"
+  publish:
+    - "topic://compliance/audit"
+  errors:
+    - "topic://compliance/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/audit_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  soc2: true
+  audit_logging: enforced
+  pii: true

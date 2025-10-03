@@ -1,0 +1,22 @@
+kind: Agent
+name: pharmacy-dispense
+version: 0.1.0
+runtime: rust
+description: >
+  Processes NCPDP dispense events, decrements pharmacy inventory, 
+  and generates FHIR MedicationDispense resources.
+topics:
+  subscribe:
+    - "topic://pharmacy/dispense"
+  publish:
+    - "topic://pharmacy/inventory"
+    - "topic://emr/medication-dispense"
+  errors:
+    - "topic://pharmacy/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/pharmacy_dispense_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

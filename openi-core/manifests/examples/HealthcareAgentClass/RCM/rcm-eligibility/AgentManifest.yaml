@@ -1,0 +1,22 @@
+kind: Agent
+name: rcm-eligibility
+version: 0.1.0
+runtime: rust
+description: >
+  Executes X12 270 eligibility requests and processes 271 responses 
+  to confirm patient coverage before claim submission.
+topics:
+  subscribe:
+    - "topic://eligibility/check/*"
+  publish:
+    - "topic://eligibility/270"
+    - "topic://eligibility/271"
+  errors:
+    - "topic://eligibility/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/rcm_eligibility_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

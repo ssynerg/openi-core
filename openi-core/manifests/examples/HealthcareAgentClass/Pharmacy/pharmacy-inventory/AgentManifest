@@ -1,0 +1,18 @@
+kind: Agent
+name: pharmacy-inventory
+version: 0.1.0
+runtime: rust
+description: >
+  Manages medication stock levels, formulary updates, 
+  and generates reorder requests when thresholds are met.
+topics:
+  subscribe:
+    - "topic://pharmacy/inventory"
+  publish:
+    - "topic://pharmacy/reorder"
+  errors:
+    - "topic://pharmacy/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/pharmacy_inventory_q4.gguf"
+  quant: int4

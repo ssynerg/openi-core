@@ -3,7 +3,8 @@ name: pharmacy-rx
 version: 0.1.0
 runtime: rust
 description: >
-  Maps medication orders into NCPDP RxChange messages and checks interactions.
+  Maps medication orders from EMR into NCPDP RxChange messages 
+  and performs basic drug-drug/allergy interaction checks.
 topics:
   subscribe:
     - "topic://emr/orders/medications"

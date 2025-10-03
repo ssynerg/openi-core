@@ -1,0 +1,21 @@
+kind: Agent
+name: emr-labs
+version: 0.1.0
+runtime: rust
+description: >
+  Normalizes HL7 ORU lab result messages into FHIR Observation resources. 
+  Supports mapping of lab codes (LOINC) and result values for downstream analytics.
+topics:
+  subscribe:
+    - "topic://hl7/labs/*"
+  publish:
+    - "topic://emr/labs"
+  errors:
+    - "topic://emr/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/emr_labs_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

@@ -1,0 +1,21 @@
+kind: Agent
+name: admin-payroll
+version: 0.1.0
+runtime: rust
+description: >
+  Processes staff timesheets, automates payroll calculations, 
+  and applies incentive/bonus structures.
+topics:
+  subscribe:
+    - "topic://payroll/timesheets"
+  publish:
+    - "topic://payroll/processed"
+  errors:
+    - "topic://payroll/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/admin_payroll_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

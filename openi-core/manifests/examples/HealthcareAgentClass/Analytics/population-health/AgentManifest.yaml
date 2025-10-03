@@ -1,0 +1,23 @@
+kind: Agent
+name: population-health
+version: 0.1.0
+runtime: rust
+description: >
+  Aggregates patient data across cohorts to track quality measures, 
+  population health KPIs, and performance metrics.
+topics:
+  subscribe:
+    - "topic://emr/lab-results"
+    - "topic://emr/imaging-results"
+    - "topic://emr/notes"
+  publish:
+    - "topic://analytics/pop-health"
+  errors:
+    - "topic://analytics/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/population_health_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

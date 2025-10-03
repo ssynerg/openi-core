@@ -1,0 +1,21 @@
+kind: Agent
+name: rcm-denial-mgmt
+version: 0.1.0
+runtime: rust
+description: >
+  Automates denial management by analyzing denial codes, 
+  categorizing root causes, and routing claims for appeal or resubmission.
+topics:
+  subscribe:
+    - "topic://denials/*"
+  publish:
+    - "topic://appeals/submissions"
+  errors:
+    - "topic://denials/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/rcm_denial_mgmt_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

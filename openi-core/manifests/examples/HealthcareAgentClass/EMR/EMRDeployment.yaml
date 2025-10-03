@@ -1,0 +1,19 @@
+kind: Deployment
+name: healthcare-emr-suite
+version: 0.1.0
+description: >
+  Full Electronic Medical Record (EMR) agent suite.
+  Normalizes HL7 v2 messages into FHIR resources for orders, discharges, labs, 
+  clinical notes, and scheduling.
+
+agents:
+  - path: "manifests/examples/HealthcareAgentClass/EMR/emr-orders/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/EMR/emr-discharge/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/EMR/emr-labs/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/EMR/emr-notes/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/EMR/emr-scheduling/AgentManifest.yaml"
+
+compliance:
+  hipaa: true
+  audit_logging: enabled
+  data_retention: "7 years"

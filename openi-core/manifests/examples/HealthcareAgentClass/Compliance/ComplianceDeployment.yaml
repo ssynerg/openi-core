@@ -1,0 +1,17 @@
+kind: Deployment
+name: healthcare-compliance-suite
+version: 0.1.0
+description: >
+  Compliance and audit monitoring suite.
+  Provides universal audit logging of all PHI/PII access and 
+  enforces HIPAA/SOC2 compliance across the healthcare fabric.
+
+agents:
+  - path: "manifests/examples/HealthcareAgentClass/Compliance/audit-agent/AgentManifest.yaml"
+
+compliance:
+  hipaa: true
+  soc2: true
+  audit_logging: enforced
+  retention: 7y
+  pii: true

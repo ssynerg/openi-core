@@ -1,0 +1,20 @@
+kind: Agent
+name: fhir-gateway-agent
+version: 0.1.0
+runtime: rust
+description: >
+  Ingests FHIR RESTful API messages from external systems 
+  and publishes normalized envelopes into the fabric.
+topics:
+  publish:
+    - "topic://fhir/*"
+  errors:
+    - "topic://gateway/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/fhir_gateway_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  soc2: true
+  pii: true

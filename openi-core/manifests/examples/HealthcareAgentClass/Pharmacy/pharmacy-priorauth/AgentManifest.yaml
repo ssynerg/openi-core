@@ -1,0 +1,21 @@
+kind: Agent
+name: pharmacy-priorauth
+version: 0.1.0
+runtime: rust
+description: >
+  Submits pharmacy prior authorization requests (NCPDP SCRIPT/PA) 
+  and routes payer responses for approval or denial.
+topics:
+  subscribe:
+    - "topic://pharmacy/pa/requests"
+  publish:
+    - "topic://pharmacy/pa/responses"
+  errors:
+    - "topic://pharmacy/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/pharmacy_priorauth_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true
