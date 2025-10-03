@@ -1,5 +1,5 @@
 use ed25519_dalek::{Signer as _, Verifier as _, Signature as DalekSignature, SigningKey, VerifyingKey};
-use rand_core::OsRng;
+use getrandom::getrandom;
 use base64::{engine::general_purpose, Engine as _};
 
 pub type Signature = String;
@@ -13,7 +13,11 @@ pub struct Keypair {
 
 impl Keypair {
     pub fn generate() -> Self {
-        let signing = SigningKey::generate(&mut OsRng);
+        // Seed the signing key from the OS RNG via getrandom to avoid version
+        // conflicts between different `rand_core` versions pulled in by deps.
+        let mut seed = [0u8; 32];
+        getrandom(&mut seed).expect("getrandom");
+        let signing = SigningKey::from_bytes(&seed);
         let verify = signing.verifying_key();
         Keypair { signing, verify }
     }
@@ -53,7 +57,7 @@ impl Verifier {
         let sb = general_purpose::STANDARD.decode(sig_b64)?;
         let sig = ed25519_dalek::Signature::from_bytes(
             &sb.try_into().map_err(|_| anyhow::anyhow!("sig length"))?
-        )?;
+        );
         self.vk.verify(bytes, &sig).map_err(|e| anyhow::anyhow!(e))
     }
 }

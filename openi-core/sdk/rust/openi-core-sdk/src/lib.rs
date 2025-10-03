@@ -12,7 +12,7 @@ impl Agent {
         Self { name: name.into(), version: version.into() }
     }
 
-    pub async fn publish<T: Serialize>(&self, dest: &str, ctype: &str, payload: T) -> Result<()> {
+    pub async fn publish<T: Serialize + DeserializeOwned>(&self, dest: &str, ctype: &str, payload: T) -> Result<()> {
         let env = Envelope::new(format!("agent://local/{}", self.name), dest.to_string(), ctype.to_string(), payload);
         // TODO: send into local kernel's mailbox (stub)
         println!("[publish] {}", serde_json::to_string(&env)?);

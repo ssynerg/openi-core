@@ -1,4 +1,4 @@
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, CommandFactory};
 use tracing_subscriber::EnvFilter;
 
 #[derive(Parser)]
