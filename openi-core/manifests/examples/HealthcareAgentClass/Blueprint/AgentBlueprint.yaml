@@ -1,0 +1,45 @@
+kind: AgentBlueprint
+version: 0.1.0
+description: >
+  Defines agent specifications and message flows across the OpenI Healthcare Fabric.
+
+fields:
+  name:
+    type: string
+    description: Logical agent identifier
+  runtime:
+    type: enum[rust, python, go]
+    description: Execution environment
+  topics:
+    subscribe:
+      - pattern: string
+        description: Topics the agent consumes
+    publish:
+      - pattern: string
+        description: Topics the agent produces
+    errors:
+      - pattern: string
+        description: Error reporting topics
+  model:
+    type: object
+    fields:
+      type: enum[slm, none]
+      path: string
+      quant: enum[int4, int8, fp16]
+  compliance:
+    hipaa: bool
+    soc2: bool
+    audit_logging: bool
+  dependencies:
+    - name: string
+      reason: string
+  state:
+    backend: enum[sqlite, postgres, memory]
+    persistence: bool
+  observability:
+    metrics_topic: string
+    health_check_interval: string
+  security:
+    role: enum[intake, triage, clinician, rcm, admin, audit]
+    access_level: enum[read, write, both]
+    encryption: enum[aes256, rsa2048, none]
