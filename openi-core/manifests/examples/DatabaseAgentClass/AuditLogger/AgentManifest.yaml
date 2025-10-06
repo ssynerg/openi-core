@@ -1,0 +1,20 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: audit-logger
+  class: DatabaseAgentClass
+spec:
+  runtime: rust
+  image: openi/audit-logger:1.0
+  inputs:
+    - type: event
+      format: json
+  outputs:
+    - type: audit-log
+      format: json
+  policies:
+    - name: immutable-logging
+      action: enforce
+  permissions:
+    - storage: append-only
+    - db: read

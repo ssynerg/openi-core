@@ -1,0 +1,21 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: tokenizer
+  class: DatabaseAgentClass
+spec:
+  runtime: rust
+  image: openi/tokenizer:1.0
+  inputs:
+    - type: sensitive-field
+      format: json
+  outputs:
+    - type: tokenized-field
+      format: json
+  policies:
+    - name: reversible-mapping
+      action: enforce
+  permissions:
+    - kms: encrypt
+    - kms: decrypt
+    - db: write
