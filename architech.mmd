@@ -1,0 +1,40 @@
+flowchart TB
+  subgraph Core["Rust Core Fabric"]
+    Fabric[core-fabric]
+    Kernel[core-kernel]
+    CLI[core-cli]
+  end
+
+  subgraph Healthcare["HealthcareAgentClass"]
+    EMR[EMR Agents]
+    RCM[RCM Agents]
+    Analytics[Analytics Agents]
+  end
+
+  subgraph DevOps["DevOpsAgentClass"]
+    Infra[InfraProvisioner]
+    CI[CI/CD Pipeline]
+    Monitor[Monitoring & Logs]
+    Security[Compliance & Secrets]
+  end
+
+  subgraph Database["DatabaseAgentClass"]
+    Schema[SchemaMigrator]
+    ETL[ETLTransformer]
+    Tokenizer[Tokenizer]
+    Audit[AuditLogger]
+  end
+
+  subgraph AIOps["AIOpsAgentClass (Stage 4)"]
+    Trainer[ModelTrainer]
+    Registry[ModelRegistryAgent]
+    Drift[DriftDetector]
+    Explain[ExplainabilityAgent]
+  end
+
+  Fabric --> Healthcare
+  Fabric --> DevOps
+  Fabric --> Database
+  Fabric --> AIOps
+  Kernel --> Fabric
+  CLI --> Fabric
