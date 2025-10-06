@@ -1,0 +1,20 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: chaos-engineer
+  class: DevOpsAgentClass
+spec:
+  runtime: rust
+  image: openi/chaos-engineer:1.0
+  inputs:
+    - type: schedule
+      format: cron
+  outputs:
+    - type: chaos-report
+      format: json
+  policies:
+    - name: safe-namespace-only
+      action: enforce
+  permissions:
+    - k8s: disrupt
+    - slack: notify
