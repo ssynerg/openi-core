@@ -1,0 +1,21 @@
+kind: Agent
+name: admin-staffing
+version: 0.1.0
+runtime: rust
+description: >
+  Manages staffing assignments, shift coverage, and on-call scheduling.
+  Integrates census and workload data for capacity-aware scheduling.
+topics:
+  subscribe:
+    - "topic://staffing/requests"
+  publish:
+    - "topic://staffing/assignments"
+  errors:
+    - "topic://staffing/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/admin_staffing_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

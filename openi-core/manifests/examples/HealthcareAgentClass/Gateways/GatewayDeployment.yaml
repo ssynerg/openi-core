@@ -1,0 +1,17 @@
+kind: Deployment
+name: healthcare-gateway-suite
+version: 0.1.0
+description: >
+  Gateway suite for healthcare. Provides external integration points 
+  for HL7 v2, FHIR, and X12 transaction ingestion into the agent fabric.
+
+agents:
+  - path: "manifests/examples/HealthcareAgentClass/Gateways/hl7-gateway-agent/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Gateways/fhir-gateway-agent/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Gateways/x12-gateway-agent/AgentManifest.yaml"
+
+compliance:
+  hipaa: true
+  soc2: true
+  audit_logging: enabled
+  data_retention: "7 years"

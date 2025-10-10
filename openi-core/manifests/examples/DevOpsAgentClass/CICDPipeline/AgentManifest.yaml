@@ -1,0 +1,22 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: cicd-pipeline
+  class: DevOpsAgentClass
+spec:
+  runtime: rust
+  image: openi/cicd-pipeline:1.0
+  inputs:
+    - type: commit
+      format: git
+  outputs:
+    - type: artifact
+      format: container
+    - type: manifest
+      format: yaml
+  policies:
+    - name: signed-artifacts
+      action: enforce
+  permissions:
+    - git: read
+    - registry: write

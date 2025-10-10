@@ -1,0 +1,21 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: anonymizer
+  class: DatabaseAgentClass
+spec:
+  runtime: rust
+  image: openi/anonymizer:1.0
+  inputs:
+    - type: dataset
+      format: json
+  outputs:
+    - type: anonymized-dataset
+      format: json
+  policies:
+    - name: hipaa-safe-harbor
+      action: enforce
+  permissions:
+    - db: read
+    - db: write
+    - pii: access

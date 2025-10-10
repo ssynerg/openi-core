@@ -1,0 +1,83 @@
+%%{init: {"theme": "default"}}%%
+graph LR
+
+%% === EXECUTIVE SUITE ===
+A["CEO – Shane Sipe"]
+classDef exec fill:#222,color:#fff,stroke:#000,stroke-width:1px;
+
+A --> B["COO – Doug Hansen\nOperations & Construction"]
+A --> C["CTO – Chief Technology Officer\nCore Systems & Architecture"]
+A --> D["CFO – Chief Financial Officer\nFinance & Capital Strategy"]
+A --> E["CPO – Chief Product Officer\nProduct & Design"]
+A --> F["CMO/CBO – Marketing & Partnerships\nGrowth & GTM"]
+A --> G["CCSO – Compliance & Security\nHIPAA • SOC2 • Legal"]
+A --> H["Chief People Officer – Julie Maroney"]
+A --> O["Global Product & Engineering Division 🌍\n150+ Overseas Developers & Product Teams"]
+
+%% === GLOBAL PRODUCT & ENGINEERING (REPORTS TO CEO) ===
+O --> INT1["Regional Director – Asia (India • Philippines • Vietnam)"]
+O --> INT2["Regional Director – Eastern Europe (Poland • Romania • Ukraine)"]
+O --> INT3["Regional Director – LATAM (Brazil • Argentina • Chile)"]
+O --> INT4["QA & Test Automation Director – India / Remote"]
+O --> INT5["Product Development Coordination Office – CEO Oversight"]
+
+INT1 --> INT1a["Backend Teams (Rust / Python / Go)"]
+INT1 --> INT1b["Frontend Teams (React / Flutter)"]
+INT2 --> INT2a["Infrastructure & ML Engineers"]
+INT2 --> INT2b["ETL / Data Integration Specialists"]
+INT3 --> INT3a["Product Managers & UX Engineers"]
+INT3 --> INT3b["API & SDK Teams"]
+INT4 --> INT4a["QA Automation & Test Infra Teams"]
+INT4 --> INT4b["Release Verification Team"]
+INT5 --> INT5a["Scrum Masters / PM Leads (15+)"]
+INT5 --> INT5b["Cross-Division DevOps Sync Team"]
+
+%% === DOMESTIC TECHNOLOGY DIVISION ===
+C --> C1["VP Engineering – OpenI Platform"]
+C --> C2["VP AI/ML – Micro-LLMs & Agents"]
+C --> C3["VP Infrastructure & DevOps"]
+C --> C4["Head Data Engineering / Transformation"]
+C --> C5["Head QA & Automation"]
+
+C1 --> C1a["Lead Architect – OpenI-Core (Rust Fabric)"]
+C1 --> C1b["Lead Engineer – OpenI-Transform"]
+C1 --> C1c["Lead Engineer – OpenI-Office Suite"]
+C2 --> C2a["ML Ops Engineer"]
+C2 --> C2b["AI Systems Engineer"]
+
+%% === PRODUCT DIVISION ===
+E --> E1["Director – Healthcare (OpenI-Health)"]
+E --> E2["Director – DevOps Vertical"]
+E --> E3["Director – Productivity (OpenI-Office)"]
+E --> E4["Director – OpenI-Companion (Mobile/Desktop)"]
+E --> E5["UX/UI Director – Design Systems"]
+
+%% === OPERATIONS & CONSTRUCTION ===
+B --> B1["Director – Operations / Deployments"]
+B --> B2["Director – Supply Chain & Vendors"]
+B --> B3["Field Infrastructure Rollout Lead"]
+B --> B4["VP – Construction & Facilities Engineering – Daniel Rivers"]
+B4 --> CON1["Director – Construction Projects"]
+B4 --> CON2["Director – Fabrication & Assembly"]
+B4 --> CON3["Director – Field Engineering / Site Mgmt"]
+B4 --> CON4["Facilities Ops Manager"]
+
+%% === PEOPLE / CULTURE ===
+H --> H1["HR Manager – Julie Maroney"]
+H --> H2["Talent Acquisition – Jodi Tadlock"]
+H --> H3["Training & Development Lead"]
+
+%% === COLOR CODING ===
+class A,B,C,D,E,F,G,H,O exec;
+class INT1,INT2,INT3,INT4,INT5,INT1a,INT1b,INT2a,INT2b,INT3a,INT3b,INT4a,INT4b,INT5a,INT5b global;
+class C1,C2,C3,C4,C5,C1a,C1b,C1c,C2a,C2b tech;
+class E1,E2,E3,E4,E5 product;
+class B1,B2,B3,B4,CON1,CON2,CON3,CON4 ops;
+class H1,H2,H3 people;
+
+classDef global fill:#cde8d8,stroke:#1b5e20,color:#000;
+classDef tech fill:#d9e8ff,stroke:#0056b3,color:#000;
+classDef product fill:#fff0cc,stroke:#cc9a00,color:#000;
+classDef ops fill:#e8f5e9,stroke:#2e7d32,color:#000;
+classDef people fill:#fff3e0,stroke:#ef6c00,color:#000;
+classDef exec fill:#222,color:#fff,stroke:#000;

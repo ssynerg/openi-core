@@ -1,0 +1,15 @@
+apiVersion: openi.ai/v1
+kind: AgentBlueprint
+metadata:
+  name: DevOpsAgentBlueprint
+spec:
+  agents:
+    - name: infra-provisioner
+    - name: cicd-pipeline
+    - name: secrets-rotator
+    - name: compliance-gate
+    - name: monitoring-agent
+    - name: log-aggregator
+    - name: incident-responder
+    - name: chaos-engineer
+    - name: cost-optimizer

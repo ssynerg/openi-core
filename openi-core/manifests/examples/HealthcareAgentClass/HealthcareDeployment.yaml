@@ -1,0 +1,24 @@
+kind: Deployment
+name: healthcare-fabric
+version: 0.1.0
+description: >
+  Full end-to-end healthcare agent fabric.
+  Integrates EMR, RCM, Pharmacy, Lab/Imaging, Admin, Compliance,
+  Analytics, and Gateway suites into one deployable system.
+
+suites:
+  - path: "manifests/examples/HealthcareAgentClass/EMR/EMRDeployment.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/RCM/HealthcareRCMDeployment.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Pharmacy/PharmacyDeployment.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/LabImaging/LabImagingDeployment.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Admin/AdminDeployment.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Compliance/ComplianceDeployment.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Analytics/AnalyticsDeployment.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Gateways/GatewayDeployment.yaml"
+
+compliance:
+  hipaa: true
+  soc2: true
+  audit_logging: enforced
+  retention: 7y
+  pii: true

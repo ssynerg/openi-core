@@ -1,0 +1,450 @@
+kind: MasterBlueprint
+version: 1.0.0
+description: >
+  Full OpenI Healthcare Fabric Agent Network Blueprint
+  Defines all verticals, message routes, and dependencies.
+
+agents:
+
+  # ───────────────────────────────
+  # 🛰️ Gateways Suite
+  # ───────────────────────────────
+  - name: hl7-gateway-agent
+    runtime: rust
+    description: "Ingests HL7 v2.x messages from external hospital feeds and normalizes them into envelopes."
+    topics:
+      publish: ["topic://hl7/*"]
+      errors: ["topic://gateway/errors"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/hl7_gateway_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+      soc2: true
+      audit_logging: true
+
+  - name: fhir-gateway-agent
+    runtime: rust
+    description: "Handles inbound FHIR RESTful payloads and publishes normalized envelopes."
+    topics:
+      publish: ["topic://fhir/*"]
+      errors: ["topic://gateway/errors"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/fhir_gateway_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+      soc2: true
+      audit_logging: true
+
+  - name: x12-gateway-agent
+    runtime: rust
+    description: "Ingests and normalizes X12 transactions (837, 835, 270/271)."
+    topics:
+      publish: ["topic://x12/*"]
+      errors: ["topic://gateway/errors"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/x12_gateway_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+      soc2: true
+      audit_logging: true
+
+  # ───────────────────────────────
+  # 🏥 EMR Suite
+  # ───────────────────────────────
+  - name: emr-orders
+    runtime: rust
+    description: "Normalizes HL7 ORC/ORM/ORU messages into FHIR Orders."
+    topics:
+      subscribe: ["topic://hl7/orders/*"]
+      publish: ["topic://emr/orders"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/emr_orders_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: emr-notes
+    runtime: rust
+    description: "Stores clinician notes and triage summaries into FHIR Composition resources."
+    topics:
+      subscribe: ["topic://clinical/review/decisions"]
+      publish: ["topic://emr/notes"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/emr_notes_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: emr-requests-agent
+    runtime: rust
+    description: "Handles request/response access to EMR resources (Patient, Encounter, Medication)."
+    topics:
+      subscribe: ["topic://emr/requests/*"]
+      publish: ["topic://emr/responses/*"]
+    model:
+      type: none
+    compliance:
+      hipaa: true
+      audit_logging: true
+
+  - name: emr-writer-agent
+    runtime: rust
+    description: "Writes all finalized FHIR resources back into the EMR via API or database connector."
+    topics:
+      subscribe:
+        - "topic://emr/intake"
+        - "topic://emr/orders"
+        - "topic://emr/notes"
+        - "topic://pharmacy/dispense"
+        - "topic://claims/837"
+      publish: ["topic://emr/commit"]
+    model:
+      type: none
+    compliance:
+      hipaa: true
+      soc2: true
+      audit_logging: true
+
+  # ───────────────────────────────
+  # 💳 RCM Suite
+  # ───────────────────────────────
+  - name: rcm-claims
+    runtime: rust
+    description: "Processes X12 837 claim submissions from EMR discharge events."
+    topics:
+      subscribe: ["topic://emr/discharge/*"]
+      publish: ["topic://claims/837"]
+      errors: ["topic://claims/errors"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/rcm_claims_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: rcm-remittance
+    runtime: rust
+    description: "Handles X12 835 remittance processing."
+    topics:
+      subscribe: ["topic://remittance/*"]
+      publish: ["topic://remittance/processed"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/rcm_remittance_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: rcm-eligibility
+    runtime: rust
+    description: "Verifies patient eligibility using X12 270/271."
+    topics:
+      subscribe: ["topic://emr/patient"]
+      publish: ["topic://rcm/eligibility"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/rcm_eligibility_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: rcm-denial-mgmt
+    runtime: rust
+    description: "Manages claim denials and resubmissions."
+    topics:
+      subscribe: ["topic://denials/*"]
+      publish: ["topic://claims/resubmit"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/rcm_denial_mgmt_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: rcm-pricing
+    runtime: rust
+    description: "Handles charge capture and pricing validation."
+    topics:
+      subscribe: ["topic://claims/837"]
+      publish: ["topic://claims/priced"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/rcm_pricing_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  # ───────────────────────────────
+  # 💊 Pharmacy Suite
+  # ───────────────────────────────
+  - name: pharmacy-rx
+    runtime: rust
+    description: "Maps medication orders into NCPDP RxChange messages and checks interactions."
+    topics:
+      subscribe: ["topic://emr/orders/medications"]
+      publish: ["topic://pharmacy/dispense"]
+      errors: ["topic://pharmacy/interactions"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/pharmacy_rx_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  # ───────────────────────────────
+  # 🧪 Lab / Imaging Suite
+  # ───────────────────────────────
+  - name: lab-results
+    runtime: rust
+    description: "Validates HL7 ORU^R01 lab results and maps to FHIR Observation resources."
+    topics:
+      subscribe: ["topic://lab/*"]
+      publish: ["topic://emr/lab-results"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/lab_results_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  # ───────────────────────────────
+  # 🧭 Admin Suite
+  # ───────────────────────────────
+  - name: admin-scheduling
+    runtime: rust
+    description: "Optimizes provider schedules and confirms appointments."
+    topics:
+      subscribe: ["topic://scheduling/requests"]
+      publish: ["topic://scheduling/confirmed"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/scheduling_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  # ───────────────────────────────
+  # 🔒 Compliance Suite
+  # ───────────────────────────────
+  - name: audit-agent
+    runtime: rust
+    description: "Monitors all topics for PHI access and logs audit trails."
+    topics:
+      subscribe: ["topic://*"]
+      publish: ["topic://compliance/audit"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/audit_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+      soc2: true
+      audit_logging: true
+
+  - name: permissions-agent
+    runtime: rust
+    description: "Enforces role-based and attribute-based access control for PHI topics."
+    topics:
+      subscribe: ["topic://emr/requests/*"]
+      publish: ["topic://emr/authorized/*"]
+    model:
+      type: none
+    compliance:
+      hipaa: true
+      audit_logging: true
+
+  # ───────────────────────────────
+  # 📈 Analytics Suite
+  # ───────────────────────────────
+  - name: predictive-agent
+    runtime: rust
+    description: "Runs predictive analytics for LOS and readmission risk."
+    topics:
+      subscribe: ["topic://emr/discharge/*"]
+      publish: ["topic://analytics/predictions"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/predictive_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: population-health
+    runtime: rust
+    description: "Aggregates population metrics and quality measures."
+    topics:
+      subscribe: ["topic://emr/lab-results"]
+      publish: ["topic://analytics/pop-health"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/pop_health_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  # ───────────────────────────────
+  # 🧠 Care Suite
+  # ───────────────────────────────
+  - name: triage-agent
+    runtime: rust
+    description: "Uses symptom ranking + intake data to assign urgency and propose scheduling."
+    topics:
+      subscribe:
+        - "topic://emr/intake"
+        - "topic://triage/rankings"
+      publish:
+        - "topic://triage/notes"
+        - "topic://scheduling/requests"
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/triage_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: symptom-ranking-agent
+    runtime: rust
+    description: "Generates condition likelihoods and severity scores from intake text."
+    topics:
+      subscribe: ["topic://emr/intake"]
+      publish: ["topic://triage/rankings"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/symptom_rank_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: clinician-router-agent
+    runtime: rust
+    description: "Packages triage notes, ranking, and scheduling into NP review items."
+    topics:
+      subscribe:
+        - "topic://scheduling/confirmed"
+        - "topic://triage/notes"
+      publish: ["topic://clinical/review/queue"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/clinician_router_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: clinician-review-agent
+    runtime: rust
+    description: "Captures NP decisions, generates FHIR Composition, and closes case."
+    topics:
+      subscribe: ["topic://clinical/review/queue"]
+      publish:
+        - "topic://clinical/review/decisions"
+        - "topic://emr/notes"
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/clinician_review_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: erx-bridge-agent
+    runtime: rust
+    description: "Converts NP decisions into NCPDP SCRIPT/RxChange for Pharmacy."
+    topics:
+      subscribe: ["topic://clinical/review/decisions"]
+      publish: ["topic://pharmacy/dispense"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/erx_bridge_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  - name: case-orchestrator-agent
+    runtime: rust
+    description: "Tracks case state across all events and raises alerts if SLAs fail."
+    topics:
+      subscribe: ["topic://*/**"]
+      publish: ["topic://alerts/ops"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/orchestrator_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+      audit_logging: true
+
+  - name: rcm-case-closer-agent
+    runtime: rust
+    description: "Generates X12 837 claims from encounter closure data."
+    topics:
+      subscribe:
+        - "topic://clinical/review/decisions"
+        - "topic://pharmacy/dispense"
+      publish: ["topic://claims/837"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/rcm_case_closer_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+
+  # ───────────────────────────────
+  # 🧾 Intake Suite
+  # ───────────────────────────────
+  - name: intake-voice-agent
+    runtime: rust
+    description: "Captures patient responses via speech and transcribes with ASR."
+    topics:
+      subscribe: ["topic://intake/voice/raw"]
+      publish: ["topic://intake/voice/transcript"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/intake_voice_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+      pii: true
+      soc2: true
+      audit_logging: true
+      data_retention: "7 years"
+
+  - name: intake-text-agent
+    runtime: rust
+    description: "Handles chat/text-based patient intake questionnaires."
+    topics:
+      subscribe: ["topic://intake/text/raw"]
+      publish: ["topic://intake/text/response"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/intake_text_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+      pii: true
+      soc2: true
+  
+  - name: intake-normalizer-agent
+    runtime: rust
+    description: "Normalizes intake data (voice/text) into FHIR QuestionnaireResponse."
+    topics:
+      subscribe:
+        - "topic://intake/voice/transcript"
+        - "topic://intake/text/response"
+      publish: ["topic://emr/intake"]
+    model:
+      type: slm
+      path: "model_plane/runtimes/gguf_local/intake_normalizer_q4.gguf"
+      quant: int4
+    compliance:
+      hipaa: true
+      pii: true
+      soc2: true
+      audit_logging: true
+      data_retention: "7 years"

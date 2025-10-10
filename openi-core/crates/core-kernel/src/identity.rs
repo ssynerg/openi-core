@@ -1,4 +1,5 @@
-pub fn bootstrap_identity() {
-    // TODO: join token -> mTLS -> trust bundle
-    // For now, stub.
+use tracing::info;
+
+pub fn init() {
+    info!("Identity subsystem initialized (stub)");
 }

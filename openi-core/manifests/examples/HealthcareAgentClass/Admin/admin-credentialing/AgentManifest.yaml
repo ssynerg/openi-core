@@ -1,0 +1,21 @@
+kind: Agent
+name: admin-credentialing
+version: 0.1.0
+runtime: rust
+description: >
+  Validates provider credentials, monitors license expirations, 
+  and generates alerts for re-credentialing requirements.
+topics:
+  subscribe:
+    - "topic://credentialing/updates"
+  publish:
+    - "topic://credentialing/validated"
+  errors:
+    - "topic://credentialing/errors"
+model:
+  type: slm
+  path: "model_plane/runtimes/gguf_local/admin_credentialing_q4.gguf"
+  quant: int4
+compliance:
+  hipaa: true
+  pii: true

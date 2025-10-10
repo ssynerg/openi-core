@@ -7,9 +7,12 @@ description = "OpenI kernel: node runtime, identity, policy hooks (stubs)"
 
 [dependencies]
 openi-core-fabric = { path = "../core-fabric" }
+openi-core-reflex = { path = "../core-reflex" }
 serde = { version = "1", features = ["derive"] }
 tracing = "0.1"
 thiserror = "1"
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "signal"] }
 anyhow = "1"
+async-trait = "0.1"
 rand = "0.9.2"
+serde_json = "1.0.145"

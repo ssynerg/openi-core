@@ -1,0 +1,20 @@
+kind: Deployment
+name: healthcare-analytics-suite
+version: 0.1.0
+description: >
+  Analytics agent suite for healthcare.
+  Provides predictive models, population health, 
+  RCM performance, pharmacy insights, and operational intelligence.
+
+agents:
+  - path: "manifests/examples/HealthcareAgentClass/Analytics/predictive-agent/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Analytics/population-health/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Analytics/rcm-analytics/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Analytics/pharmacy-analytics/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/Analytics/operational-analytics/AgentManifest.yaml"
+
+compliance:
+  hipaa: true
+  soc2: true
+  audit_logging: enabled
+  data_retention: "7 years"

@@ -1,0 +1,21 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: etl-transformer
+  class: DatabaseAgentClass
+spec:
+  runtime: rust
+  image: openi/etl-transformer:1.0
+  inputs:
+    - type: raw-data
+      format: csv
+  outputs:
+    - type: transformed-data
+      format: parquet
+  policies:
+    - name: schema-validation
+      action: enforce
+  permissions:
+    - storage: read
+    - storage: write
+    - db: write

@@ -1,4 +1,5 @@
-pub fn check_policy(_scope: &str) -> bool {
-    // TODO: evaluate WASM policy
-    true
+use tracing::info;
+
+pub fn init() {
+    info!("Policy subsystem initialized (stub)");
 }

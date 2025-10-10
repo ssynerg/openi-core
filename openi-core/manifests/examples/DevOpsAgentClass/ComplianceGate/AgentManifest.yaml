@@ -1,0 +1,22 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: compliance-gate
+  class: DevOpsAgentClass
+spec:
+  runtime: rust
+  image: openi/compliance-gate:1.0
+  inputs:
+    - type: artifact
+      format: plan
+  outputs:
+    - type: compliance-report
+      format: json
+  policies:
+    - name: hipaa-check
+      action: enforce
+    - name: soc2-check
+      action: enforce
+  permissions:
+    - policy: evaluate
+    - report: write

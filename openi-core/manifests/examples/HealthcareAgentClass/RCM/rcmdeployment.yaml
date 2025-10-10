@@ -1,0 +1,19 @@
+kind: Deployment
+name: healthcare-rcm-suite
+version: 0.1.0
+description: >
+  Full Revenue Cycle Management (RCM) agent suite for healthcare.
+  Includes claims submission, remittance processing, eligibility checks,
+  denial management, and pricing automation.
+
+agents:
+  - path: "manifests/examples/HealthcareAgentClass/RCM/rcm-claims/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/RCM/rcm-remittance/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/RCM/rcm-eligibility/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/RCM/rcm-denial-mgmt/AgentManifest.yaml"
+  - path: "manifests/examples/HealthcareAgentClass/RCM/rcm-pricing/AgentManifest.yaml"
+
+compliance:
+  hipaa: true
+  audit_logging: enabled
+  data_retention: "7 years"

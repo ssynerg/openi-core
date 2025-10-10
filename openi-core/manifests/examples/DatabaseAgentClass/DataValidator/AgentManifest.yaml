@@ -1,0 +1,19 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: data-validator
+  class: DatabaseAgentClass
+spec:
+  runtime: rust
+  image: openi/data-validator:1.0
+  inputs:
+    - type: dataset
+      format: parquet
+  outputs:
+    - type: validation-report
+      format: json
+  policies:
+    - name: integrity-check
+      action: enforce
+  permissions:
+    - db: read

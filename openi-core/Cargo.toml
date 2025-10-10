@@ -4,6 +4,7 @@ members = [
   "crates/core-fabric",
   "crates/core-kernel",
   "crates/core-cli",
+  "crates/core-reflex",
   "sdk/rust/openi-core-sdk",
 ]
 

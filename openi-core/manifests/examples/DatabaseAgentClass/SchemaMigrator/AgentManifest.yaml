@@ -1,0 +1,20 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: schema-migrator
+  class: DatabaseAgentClass
+spec:
+  runtime: rust
+  image: openi/schema-migrator:1.0
+  inputs:
+    - type: schema-change
+      format: ddl
+  outputs:
+    - type: migration-report
+      format: json
+  policies:
+    - name: backup-before-migration
+      action: enforce
+  permissions:
+    - db: alter
+    - storage: backup

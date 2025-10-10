@@ -1,0 +1,151 @@
+
+flowchart TD
+    %% ==== Lanes ====
+    subgraph PATIENT["Patient"]
+      PText[SMS/Text]
+      PVoice[Phone/Voice]
+    end
+
+    subgraph GATEWAYS["Gateways"]
+      HL7[hl7-gateway-agent]
+      FHIR[fhir-gateway-agent]
+      X12[x12-gateway-agent]
+    end
+
+    subgraph INTAKE["Intake"]
+      IV[intake-voice-agent]
+      IT[intake-text-agent]
+      IN[intake-normalizer-agent]
+    end
+
+    subgraph CARE["Care / Clinical Flow"]
+      SR[symptom-ranking-agent]
+      TR[triage-agent]
+      CR[clinician-router-agent]
+      NP[clinician-review-agent]
+      ERX[erx-bridge-agent]
+      ORCH[case-orchestrator-agent]
+    end
+
+    subgraph ADMIN["Admin"]
+      SCHED[admin-scheduling]
+    end
+
+    subgraph EMR["EMR"]
+      EO[emr-orders]
+      EN[emr-notes]
+      EREQ[emr-requests-agent]
+      EWR[emr-writer-agent]
+    end
+
+    subgraph PHARM["Pharmacy"]
+      PRX[pharmacy-rx]
+    end
+
+    subgraph RCM["RCM"]
+      RCL[rcm-claims]
+      RRM[rcm-remittance]
+      RPR[rcm-pricing]
+      RDN[rcm-denial-mgmt]
+      RCC[rcm-case-closer-agent]
+    end
+
+    subgraph LABIMG["Lab / Imaging"]
+      LRES[lab-results]
+    end
+
+    subgraph ANALYTICS["Analytics"]
+      PRED[predictive-agent]
+      POP[population-health]
+    end
+
+    subgraph COMPLIANCE["Compliance"]
+      AUD[audit-agent]
+      RBAC[permissions-agent]
+    end
+
+    %% ==== Patient to Intake ====
+    PText --> IT
+    PVoice --> IV
+    IV -->|voice transcript| IN
+    IT -->|text answer| IN
+    IN -->|FHIR QuestionnaireResponse| EMR:::emrTopic
+    IN --> SR
+
+    %% ==== Ranking feeds Triage ====
+    SR --> TR
+
+    %% ==== Triage to Scheduling with urgency ====
+    TR -->|urgency & windows| SCHED
+    SCHED -->|hold/confirm| CR
+
+    %% ==== Clinician review ====
+    CR --> NP
+    NP -->|final decision note| EN
+    NP -->|Rx decision| ERX
+    NP -->|encounter closed| RCC
+
+    %% ==== Pharmacy path ====
+    ERX --> PRX
+    PRX -->|dispense event| EWR
+
+    %% ==== RCM path ====
+    RCC --> RCL
+    RCL --> RPR
+    RCL --> RDN
+    RRM --> RCL
+    RCL -->|837 claim| EWR
+
+    %% ==== EMR I/O ====
+    HL7 --> EO
+    FHIR --> EO
+    EO --> EWR
+    LRES -->|FHIR Observation| EWR
+
+    %% EMR read pattern (requests/responses over bus)
+    classDef req fill:#fff,stroke:#999,stroke-dasharray: 5 5;
+    class EREQ req;
+    TR -.->|read history| EREQ
+    SR -.->|read allergies/meds| EREQ
+    SCHED -.->|provider availability| EREQ
+    NP -.->|fetch prior notes| EREQ
+    RCC -.->|billing context| EREQ
+    ERX -.->|allergy check| EREQ
+
+    %% ==== Analytics ====
+    EN --> PRED
+    EWR --> PRED
+    EWR --> POP
+
+    %% ==== Compliance hooks ====
+    classDef audit fill:#ffe,stroke:#cc0;
+    AUD --- PText
+    AUD --- PVoice
+    AUD --- IN
+    AUD --- SR
+    AUD --- TR
+    AUD --- SCHED
+    AUD --- CR
+    AUD --- NP
+    AUD --- ERX
+    AUD --- PRX
+    AUD --- EO
+    AUD --- EN
+    AUD --- EWR
+    AUD --- EREQ
+    AUD --- RCL
+    AUD --- RRM
+    AUD --- RPR
+    AUD --- RDN
+    AUD --- RCC
+    AUD --- LRES
+    AUD --- PRED
+    AUD --- POP
+    AUD --- HL7
+    AUD --- FHIR
+    AUD --- X12
+    AUD --- ORCH
+
+    %% Styles
+    classDef emrTopic fill:#eef,stroke:#447;
+    class EMR emrTopic;

@@ -1,0 +1,20 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: incident-responder
+  class: DevOpsAgentClass
+spec:
+  runtime: rust
+  image: openi/incident-responder:1.0
+  inputs:
+    - type: alert
+      format: json
+  outputs:
+    - type: incident-ticket
+      format: jira
+  policies:
+    - name: auto-remediate
+      action: advisory
+  permissions:
+    - jira: write
+    - slack: notify

@@ -1,0 +1,20 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: log-aggregator
+  class: DevOpsAgentClass
+spec:
+  runtime: rust
+  image: openi/log-aggregator:1.0
+  inputs:
+    - type: log
+      format: fluentd
+  outputs:
+    - type: log-index
+      format: opensearch
+  policies:
+    - name: pii-redaction
+      action: enforce
+  permissions:
+    - opensearch: write
+    - fluentd: read

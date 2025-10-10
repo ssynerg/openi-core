@@ -1,0 +1,25 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: infra-provisioner
+  class: DevOpsAgentClass
+spec:
+  runtime: rust
+  image: openi/infra-provisioner:1.0
+  inputs:
+    - type: plan
+      format: terraform
+  outputs:
+    - type: resource
+      format: kubernetes
+  policies:
+    - name: audit-logging
+      action: log
+      destination: compliance-store
+  permissions:
+    - cloud: all
+    - k8s: admin
+  compliance:
+    - name: compliance-check
+      action: validate
+      source: infra-provisioner

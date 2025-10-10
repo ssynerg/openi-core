@@ -1,0 +1,20 @@
+apiVersion: openi.ai/v1
+kind: Agent
+metadata:
+  name: secrets-rotator
+  class: DevOpsAgentClass
+spec:
+  runtime: rust
+  image: openi/secrets-rotator:1.0
+  inputs:
+    - type: secret-request
+      format: json
+  outputs:
+    - type: secret
+      format: vault
+  policies:
+    - name: enforce-short-ttl
+      action: enforce
+  permissions:
+    - vault: write
+    - db: rotate
